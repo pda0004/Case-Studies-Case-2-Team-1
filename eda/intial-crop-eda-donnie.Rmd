@@ -1,0 +1,239 @@
+---
+title: "Crop VIZ"
+---
+
+In this RMD file I will run an initial EDA to compare the crops.
+
+```{r}
+library(tidyverse)
+library(readr)
+library(ggplot2)
+```
+
+```{r}
+# Load data
+crop_df <- read_csv("Crop_recommendation.csv")
+```
+# Compare average values between the crops
+
+```{r}
+crop_avgs_df <- crop_df %>%
+  group_by(label) %>%
+  summarise(
+    avg_N = mean(N),
+    avg_P = mean(P),
+    avg_K = mean(K),
+    avg_temp = mean(temperature),
+    avg_humidity = mean(humidity),
+    avg_rainfall = mean(rainfall)
+            )
+```
+
+```{r}
+ggplot(crop_avgs_df, aes(x=reorder(label,-avg_N), y=avg_N)) + 
+  theme_bw()+
+  geom_bar(stat = 'identity', fill = 'darkgreen') +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Average Nitrogen Ratios",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Nitrogen Ratio"
+   )
+```
+
+```{r}
+ggplot(crop_avgs_df, aes(x=reorder(label,-avg_P), y=avg_P)) + 
+  theme_bw()+
+  geom_bar(stat = 'identity', fill = 'darkgreen') +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Average Phosphorous Ratios",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Phosphorous Ratio"
+   )
+```
+
+```{r}
+ggplot(crop_avgs_df, aes(x=reorder(label,-avg_K), y=avg_K)) + 
+  theme_bw()+
+  geom_bar(stat = 'identity', fill = 'darkgreen') +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Average Potassium Ratios",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Potassium Ratio"
+   )
+```
+
+```{r}
+ggplot(crop_avgs_df, aes(x=reorder(label,-avg_temp), y=avg_temp)) + 
+  theme_bw()+
+  geom_bar(stat = 'identity', fill = 'darkgreen') +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Average Temperatures",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average temp C"
+   )
+```
+
+```{r}
+ggplot(crop_avgs_df, aes(x=reorder(label,-avg_humidity), y=avg_humidity)) + 
+  theme_bw()+
+  geom_bar(stat = 'identity', fill = 'darkgreen') +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Average Humidity Percentages",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Humidity %"
+   )
+```
+
+```{r}
+ggplot(crop_avgs_df, aes(x=reorder(label,-avg_rainfall), y=avg_rainfall)) + 
+  theme_bw()+
+  geom_bar(stat = 'identity', fill = 'darkgreen') +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Average Rainfall Values",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Rainfall mm"
+   )
+```
+
+# Compare Mean and Varaince for each variable for each crop
+
+```{r}
+crop_avgs_df <- crop_df %>%
+  group_by(label) %>%
+  summarise(
+    N = mean(N),
+    P = mean(P),
+    K = mean(K),
+    temp = mean(temperature),
+    humidity = mean(humidity),
+    rainfall = mean(rainfall)
+            )
+crop_avgs_df$measure <- "mean"
+
+crop_vars_df <- crop_df %>%
+  group_by(label) %>%
+  summarise(
+    N = var(N),
+    P = var(P),
+    K = var(K),
+    temp = var(temperature),
+    humidity = var(humidity),
+    rainfall = var(rainfall)
+            )
+
+crop_vars_df$measure <- "variance"
+
+crop_plot_df <- rbind(crop_avgs_df, crop_vars_df)
+```
+
+```{r}
+ggplot(crop_plot_df, aes(x = reorder(label,-N), y = N, fill = measure)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("mean", "variance"), 
+                    values=c("navyblue", "chocolate2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Nitrogen Ratio Mean and Variances",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average N/variance"
+   )
+```
+
+```{r}
+ggplot(crop_plot_df, aes(x = reorder(label,-P), y = P, fill = measure)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("mean", "variance"), 
+                    values=c("navyblue", "chocolate2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Phosphorus Ratio Mean and Variances",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average P/variance"
+   )
+```
+
+```{r}
+ggplot(crop_plot_df, aes(x = reorder(label,-K), y = K, fill = measure)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("mean", "variance"), 
+                    values=c("navyblue", "chocolate2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Potassium Ratio Mean and Variances",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average K/variance"
+   )
+```
+
+```{r}
+ggplot(crop_plot_df, aes(x = reorder(label,-temp), y = temp, fill = measure)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("mean", "variance"), 
+                    values=c("navyblue", "chocolate2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Temperature Mean and Variances",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average temp/variance"
+   )
+```
+
+```{r}
+ggplot(crop_plot_df, aes(x = reorder(label,-humidity), y = humidity, fill = measure)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("mean", "variance"), 
+                    values=c("navyblue", "chocolate2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Humidity Mean and Variances",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Humidity Percentage/variance"
+   )
+```
+
+```{r}
+ggplot(crop_plot_df, aes(x = reorder(label,-rainfall), y = rainfall, fill = measure)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("mean", "variance"), 
+                    values=c("navyblue", "chocolate2")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Rainfall Mean and Variances",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "average Rainfall mm/variance"
+   )
+```
+
+# Takeaways/ next steps
+
+It looks to me like with some crops some variables matter more than others. For example we can see above that papaya has a large variance when it comes to rainfall and muskmelon does not. This means that papayas can grow with a wide variety of rainfall amounts but muskmelons need a very specific amount to of rainfall during the growing season in order to grow. That will be very helpful to know for modeling. In the next step I am going to see if soil conditions vary greatly for some crops or if weather conditions vary greatly for some crops. 
