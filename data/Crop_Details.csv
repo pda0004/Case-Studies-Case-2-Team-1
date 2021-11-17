@@ -1,0 +1,26 @@
+Crop,Spacing,"Yield(tonne/acre)
+[1 tonne=1000kg]","Cost of cultivation
+(in INR)","Profit
+(in INR)"
+chickpea,30 cm x 10 cm,0.8-1,9957,55043
+apple,5-8m x 5-8m,30,65000,460000
+papaya,2m x 2m,30,210000,279880
+kidney beans,90cm x 90cm,1,15000,85000
+pigeon peas,60-75cm x 30 cm,0.6 to 0.8,14047,30000
+muskmelon,1.8m x 1.2m,6.5,90000,270000
+coffee,2m x 1.5m,0.4 - 0.5,110400,249600
+banana,1.8m x 1.8m,16 to 19,56000,263000
+rice,20cm x 10cm,2.2 to 2.5,27490,60000
+mungbean,45cm x 45cm,0.6,13778,22222
+watermelon,2.5-3m x 0.9-1.2m,7-8,50000,55000
+Jute,5-7cm x 5-7 cm,0.8-1,5000,36600
+Maize,60cm x 20cm,2.3,15200,33100
+Lentil,30cm x 30cm,0.6-0.8,6000,55000
+Mango,8-10m x 8x10m,2.5-3,112500,637500
+Grapes,6-8m x 6-8m,3-5,124116,252470
+Mothbeans,30-90 cm x 30-90 cm,3-4,14000,75000
+Orange,6m x 6m,4.8,112000,488000
+Blackgram,30-35cm x 10cm,0.7-0.8,13400,56000
+Cotton,60cm x 30 cm,0.4-0.5,9000,94000
+Pomegranate,4-5m to 4-5m,5,120000,320000
+Coconut,7.5m to 7.5m,2,55000,105000
