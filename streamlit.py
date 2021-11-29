@@ -41,8 +41,11 @@ if (mode == "input"):
     rain = st.number_input("Average Rainfall")
 
     st.subheader("Viable Crops")
-    prim = st.selectbox("First Choice Crop",['Corn','Rice','Beans','Grapes'])
-    crops = st.multiselect("Other Crops to compare", ['Corn','Rice','Beans','Grapes'])
+    
+    all_crops = ['Corn','Rice','Beans','Grapes']
+    prim = st.selectbox("First Choice Crop",all_crops)
+    
+    crops = st.multiselect("Other Crops to compare", all_crops)
 
     
     if st.button("Run Model"):
@@ -79,11 +82,20 @@ if(mode == "res"):
         
     st.subheader("Alternatives")
     
+    dol_to_INR = 75.12
+    INR_vals = {}
+    
+    for crop in crop_vals:
+        INR_vals[crop] = crop_vals[crop] * dol_to_INR
+    
     cols = st.columns(crop_num)
     col_num = 0
     for crop in crops:
         column = cols[col_num]
-        column.metric(crop,"$" + str('%.2f'%crop_vals[crop]),'%.2f'%(crop_vals[crop]-prim_val))
+        column.subheader(crop)
+        column.metric("Price ($)","$" + str('%.2f'%crop_vals[crop]),'%.2f'%(crop_vals[crop]-prim_val))
+        column.metric("Price (₹)",str('%.2f'%INR_vals[crop]) + "₹",'%.2f'%(INR_vals[crop]-(prim_val*dol_to_INR)) + "₹")
+        column.metric("% Yield","100%",0)
         col_num+=1
     if st.button("Return"):
         mode = "input"
