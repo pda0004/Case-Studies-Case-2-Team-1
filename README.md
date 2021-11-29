@@ -1,66 +1,41 @@
 # Case-Studies-Case-2-Team-1
 
-### Using this template
-To use the following template, click the "Use This Template button" and follow the instructions to create a new repository. Fill out the information below, deleting parts that are not specific to your project (e.g., this section). This template is set up to contain shared functions/information in the *0 files, and for individual investigations to be performed in the other files (e.g., see `11-load-demo.Rmd`.  The *0 notebooks therefore have `html_document` output (i.e., html files are not automatically created on save), whereas other notebooks should have `html_notebook` outputs (again, see `11-load-demo.Rmd`).
-
-See the box-authentication notebook if you need to do authentication via Box (for projects with security contracts or PII data). Note that this authentication method works on ACCRE, but proceed with caution.
-
 # Quick navigation
 [Background](#background)  
 [Data](#data)  
 [Models](#models)  
 [Timeline](#timeline-and-deliverables)  
 [Repo Structure](#repo-structure)  
-[Logistics](#project-logistics)  
-[Resources](#resources)  
-[Contact](#contact-info)  
 
 # Goal
-Provide an overview of the goals and deliverables of the project. Mention any relevant details or issues. 
+- Our project is focused on agriculture. The price fluctuations of agricultural products affects a country’s GDP. Hence, crop evaluation is suggestable before farming a specific type of crop. Our model helps to minimize the loss and aims to help the farmers benefit from crop prediction to make better informed financial decisions. With the help of a dashboard we hope to help in suggesting the farmers with better solutions for profitable cultivation. 
+- Crop selection based on soil, climate, geography of the region and the type of crop are some things which we intend to dive deep into.
+
 
 # Background  
 
-Provide a broad overview of the purpose of the project.
+Our team will use the crops data to build our base recommendation model and dashboard to recommend the most suitable crops to grow in a particular farm based on various parameters. We found a paper online which tells us how different factors could affect the yield of crops. Next, we will refine our model by adding the factors from paper and also adding more crop data from different areas to let it have more customized functionalities and be able to give professional crop recommendations for farmers outside of India. 
 
 # Data
 
-List any data sources here.
+Data found on Kaggle at the link below:
+
+https://www.kaggle.com/siddharthss/crop-recommendation-dataset
 
 ## Data security
 
-If there are any security concerns or requirements regarding the data, they should be described here.
+Data is found publically on the internet.
 
 ## Counts
 
-Describe the overall size of the dataset and the relative ratio of positive/negative examples for each of the response variables.
+Our dataset describes soil and weather conditions as well as a label for the crop determined to be most suitable to be grown in those conditions. The data is well-balanced, containing the same number of rows for each of the 22 crops, and the other columns describe macronutrient levels of Nitrogen, Phosphorous, and Potassium in the soil, average temperature, average humidity, and total rainfall of the growing location over the growing season. This data was collected in India and provided by the Indian Chamber for Food and Agriculture.
 
 # Models
 
-Clearly identify each of the response variables of interest.  Any additional desired analysis should also be described here.
+Our target column is the crop reccomendation, which we use to estimate percent yield.
 
 # Timeline and Deliverables
 
-Provide a timeline for the project and deadlines for specific deliverables.
+Start: 10/25/2021 
+End: 12/6/2021
 
-# Repo Structure
-
-Give a description of how the repository is structured.
-
-# Project logistics
-
-**Sprint planning**:  
-**Demo**:  
-
-**Data location**:  
-
-**Slack channel**:  
-**Zoom link**:  
-
-# Resources
-
-Add any additional helpful resources in this section.
-
-
-# Contact Info
-
-Add contact of information for any project stakeholders. Include name, email and title.  
