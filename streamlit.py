@@ -42,15 +42,29 @@ if (mode == "input"):
 
     st.subheader("Viable Crops")
     
-    all_crops = ['Corn','Rice','Beans','Grapes']
+    all_crops = ['Chickpea','Apple','Papaya','Kidney Beans','Pigeon Peas','Muskmelon','Coffee','Bananas','Rice',
+                'Mungbean','Watermelon','Jute','Maize','Lentil','Mangos','Grapes','Moth Beans','Oranges','Blackgram','Cotton',
+                'Pomegranates','Coconuts']
     prim = st.selectbox("First Choice Crop",all_crops)
     
     crops = st.multiselect("Other Crops to compare", all_crops)
 
     
+    st.subheader("Additional Parameters")
+    
+    currency = st.selectbox("Currency",["US Dollars ($)", "Indian Rupee (₹)"])
+    
+    field_length = st.number_input("Length of Field (m)",min_value = 6, step = 6)
+    field_width = st.number_input("Width of Field (m)",min_value = 6, step = 6)
+    
+    field_size = field_length * field_width
+    
     if st.button("Run Model"):
         if crops != [] and crops != [prim]:
-            mode = "res"
+            if len(crops) <= 5:
+                mode = "res"
+            else:
+                st.warning("Please select at most 5 crops to compare to")
         else:
             st.warning("You must select at least one crop that is NOT the primary crop to compare to!")
 if(mode == "res"):
@@ -61,40 +75,103 @@ if(mode == "res"):
 
     #sample values for demos, DELETE BEFORE FINAL SUBMISSION
     crop_vals = {
-        'Corn':1.00,
-        'Rice':2.00,
-        'Beans':3.00,
-        'Grapes':4.00
+        'Chickpea':55043,
+        'Apple':460000,
+        'Papaya':279880,
+        'Kidney Beans':85000,
+        'Pigeon Peas':30000,
+        'Muskmelon':270000,
+        'Coffee':249600,
+        'Bananas':263000,
+        'Rice':60000,
+        'Mungbean':22222,
+        'Watermelon':55000,
+        'Jute':36600,
+        'Maize':33100,
+        'Lentil':55000,
+        'Mangos':637500,
+        'Grapes':252470,
+        'Moth Beans':75000,
+        'Oranges':488000,
+        'Blackgram':56000,
+        'Cotton':94000,
+        'Pomegrantes':320000,
+        'Coconuts':105000
     }
     
+    crop_costs = {
+        'Chickpea':88,
+        'Apple':578,
+        'Papaya':1868,
+        'Kidney Beans':133,
+        'Pigeon Peas':124,
+        'Muskmelon':800,
+        'Coffee':982,
+        'Bananas':498,
+        'Rice':244,
+        'Mungbean':122,
+        'Watermelon':444,
+        'Jute':44,
+        'Maize':135,
+        'Lentil':53,
+        'Mangos':1000,
+        'Grapes':1104,
+        'Moth Beans':124,
+        'Oranges':966,
+        'Blackgram':119,
+        'Cotton':80,
+        'Pomegrantes':1067,
+        'Coconuts':489
+    }
+    
+    dol_to_INR = 75.12
+    
+    field_units = field_size / 36
+    
+    for crop in crop_vals:
+        crop_vals[crop] = (crop_vals[crop] / dol_to_INR) *field_units
+    for crop in crop_costs:
+        crop_costs[crop] = (crop_costs[crop] / dol_to_INR) * field_units
+    
     prim_val = crop_vals[prim] 
+    prim_cost = crop_costs[prim]
     ## MODEL OUTPUT HERE
     #yield = {MODEL OUTPUT IN DICT FORM}
     #for key in crop_vals.keys():
         #crop_vals[key] = float(crop_vals[key]) * yield[key]
     #prim_val = crop_vals[prim] * yield[key]
     
-    st.subheader("Primary Crop")
-    st.metric(prim,"$" + str('%.2f'%prim_val))
+    
     
     if prim in crops:
         crops.remove(prim)
         
+    
+    
+    
+    
+    currency_key = currency.split("(")[1][0]
+    
+    if (currency_key == "₹"):
+        prim_val = prim_val * dol_to_INR
+        prim_cost = prim_cost * dol_to_INR
+        for crop in crop_vals:
+            crop_vals[crop] = crop_vals[crop] * dol_to_INR
+            crop_costs[crop] = crop_costs[crop] * dol_to_INR
+    
+    st.subheader(prim)
+    st.metric("Expected Profit" ,currency_key + str('%.2f'%prim_val))
+    st.metric("Cost of Cultivation" ,currency_key + str('%.2f'%prim_cost))
+    
     st.subheader("Alternatives")
-    
-    dol_to_INR = 75.12
-    INR_vals = {}
-    
-    for crop in crop_vals:
-        INR_vals[crop] = crop_vals[crop] * dol_to_INR
     
     cols = st.columns(crop_num)
     col_num = 0
     for crop in crops:
         column = cols[col_num]
         column.subheader(crop)
-        column.metric("Price ($)","$" + str('%.2f'%crop_vals[crop]),'%.2f'%(crop_vals[crop]-prim_val))
-        column.metric("Price (₹)",str('%.2f'%INR_vals[crop]) + "₹",'%.2f'%(INR_vals[crop]-(prim_val*dol_to_INR)) + "₹")
+        column.metric("Price",currency_key + str('%.2f'%crop_vals[crop]),'%.2f'%(crop_vals[crop]-prim_val))
+        column.metric("Cost of Cultivation",currency_key + str('%.2f'%crop_costs[crop]),'%.2f'%(crop_costs[crop]-prim_cost),delta_color = "inverse")
         column.metric("% Yield","100%",0)
         col_num+=1
     if st.button("Return"):
