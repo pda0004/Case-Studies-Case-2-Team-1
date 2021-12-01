@@ -75,28 +75,28 @@ if(mode == "res"):
 
     #sample values for demos, DELETE BEFORE FINAL SUBMISSION
     crop_vals = {
-        'Chickpea':55043,
-        'Apple':460000,
-        'Papaya':279880,
-        'Kidney Beans':85000,
-        'Pigeon Peas':30000,
-        'Muskmelon':270000,
-        'Coffee':249600,
-        'Bananas':263000,
-        'Rice':60000,
-        'Mungbean':22222,
-        'Watermelon':55000,
-        'Jute':36600,
-        'Maize':33100,
-        'Lentil':55000,
-        'Mangos':637500,
-        'Grapes':252470,
-        'Moth Beans':75000,
-        'Oranges':488000,
-        'Blackgram':56000,
-        'Cotton':94000,
-        'Pomegrantes':320000,
-        'Coconuts':105000
+        'Chickpea':489,
+        'Apple':4092
+        'Papaya':2489,
+        'Kidney Beans':756,
+        'Pigeon Peas':266,
+        'Muskmelon':2401,
+        'Coffee':2220,
+        'Bananas':2339,
+        'Rice':533,
+        'Mungbean':197,
+        'Watermelon':489,
+        'Jute':325,
+        'Maize':294,
+        'Lentil':489,
+        'Mangos':5671,
+        'Grapes':2245,
+        'Moth Beans':667,
+        'Oranges':441,
+        'Blackgram':498,
+        'Cotton':836,
+        'Pomegrantes':2836,
+        'Coconuts':934
     }
     
     crop_costs = {
