@@ -76,7 +76,7 @@ if(mode == "res"):
     #sample values for demos, DELETE BEFORE FINAL SUBMISSION
     crop_vals = {
         'Chickpea':489,
-        'Apple':4092
+        'Apple':4092,
         'Papaya':2489,
         'Kidney Beans':756,
         'Pigeon Peas':266,
