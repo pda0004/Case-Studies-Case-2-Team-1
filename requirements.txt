@@ -4,3 +4,4 @@ pandas~=1.0.4
 plotly~=5.2.1
 streamlit~=0.89.0
 pickleshare~=0.7.5
+scikit-learn~=0.23.1
