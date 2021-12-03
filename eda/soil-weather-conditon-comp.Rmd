@@ -1,0 +1,239 @@
+---
+title: "Crop VIZ"
+---
+
+In this RMD file I will run an initial EDA to compare the crops.
+
+```{r}
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(ggcorrplot)
+library(corrplot)
+```
+
+```{r}
+setwd('C:/Users/donse/OneDrive/Documents/Fall2021/Case_Studies/Case-Studies-Case-2-Team-1/data')
+# Load data
+crop_df <- read_csv("Crop_recommendation.csv")
+standardized_crop_df <- read_csv("Crop_recommendation_standardized.csv")
+```
+
+```{r}
+crop_df %>%
+  group_by(label) %>%
+  summarise(weather_var = var(rainfall) + var(temperature) + var(humidity),
+            soil_var = var(N) + var(P) + var(K) + var(ph)) %>%
+  arrange(-weather_var)
+```
+
+```{r}
+crop_comp_df <- standardized_crop_df %>%
+  group_by(label) %>%
+  summarise(weather_var = var(rainfall) + var(temperature) + var(humidity),
+            soil_var = var(N) + var(P) + var(K) + var(ph)) %>%
+  arrange(-soil_var)
+```
+
+```{r}
+
+weather_df <- crop_comp_df %>%
+  select(label, weather_var)
+colnames(weather_df) <- c("label", "var")
+weather_df$type <- "weather"
+
+soil_df <- crop_comp_df %>%
+  select(label, soil_var)
+colnames(soil_df) <- c("label", "var")
+soil_df$type <- "soil"
+
+plot_df <- rbind(weather_df,soil_df) 
+
+```
+
+
+```{r}
+ggplot(plot_df, aes(x = reorder(label,-var), y = var, fill = type)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("weather", "soil"), 
+                    values=c("turquoise1", "saddlebrown")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Variance of Soil Variables and Weather Variables",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "Variance"
+   )
+```
+
+
+```{r}
+fullweather_df <- standardized_crop_df %>%
+  group_by(label) %>%
+  summarise(rain_var = var(rainfall), 
+            temp_var = var(temperature),
+            hum_var = var(humidity))
+
+rain_df <- fullweather_df %>%
+  select(label, rain_var)
+colnames(rain_df) <- c("label", "var")
+rain_df$type <- "rain"
+
+temp_df <- fullweather_df %>%
+  select(label, temp_var)
+colnames(temp_df) <- c("label", "var")
+temp_df$type <- "temperature"
+
+hum_df <- fullweather_df %>%
+  select(label, hum_var)
+colnames(hum_df) <- c("label", "var")
+hum_df$type <- "humidity"
+
+weather_plot_df <- rbind(rain_df, temp_df, hum_df)
+
+```
+
+
+```{r}
+ggplot(weather_plot_df, aes(x = reorder(label,-var), y = var, fill = type)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("rain", "temperature", "humidity"), 
+                    values=c("turquoise1", "saddlebrown", "darkorange1")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Variance of the Weather Variables",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "Variance"
+   )
+```
+
+
+```{r}
+fullsoil_df <- standardized_crop_df %>%
+  group_by(label) %>%
+  summarise(N_var = var(N),
+            P_var = var(P), 
+            K_var = var(K), 
+            ph_var = var(ph)) 
+
+N_df <- fullsoil_df %>%
+  select(label, N_var)
+colnames(N_df) <- c("label", "var")
+N_df$type <- "N"
+
+P_df <- fullsoil_df %>%
+  select(label, P_var)
+colnames(P_df) <- c("label", "var")
+P_df$type <- "P"
+
+K_df <- fullsoil_df %>%
+  select(label, K_var)
+colnames(K_df) <- c("label", "var")
+K_df$type <- "K"
+
+ph_df <- fullsoil_df %>%
+  select(label, ph_var)
+colnames(ph_df) <- c("label", "var")
+ph_df$type <- "ph"
+
+soil_plot_df <- rbind(N_df, P_df, K_df, ph_df)
+ 
+```
+
+```{r}
+ggplot(soil_plot_df, aes(x = reorder(label,-var), y = var, fill = type)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("N", "P", "K", "ph"), 
+                    values=c("turquoise1", "saddlebrown", "darkorange1", "black")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Variance of the Soil Variables",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "Variance"
+   )
+
+
+```
+
+Wow it seems like ph varies wildly for many crops but the rest of the soil variables do not let's remake the plot above one time without ph and see
+
+```{r}
+fullsoil_df <- standardized_crop_df %>%
+  group_by(label) %>%
+  summarise(N_var = var(N),
+            P_var = var(P), 
+            K_var = var(K), 
+            ph_var = var(ph)) 
+
+N_df <- fullsoil_df %>%
+  select(label, N_var)
+colnames(N_df) <- c("label", "var")
+N_df$type <- "N"
+
+P_df <- fullsoil_df %>%
+  select(label, P_var)
+colnames(P_df) <- c("label", "var")
+P_df$type <- "P"
+
+K_df <- fullsoil_df %>%
+  select(label, K_var)
+colnames(K_df) <- c("label", "var")
+K_df$type <- "K"
+
+soil_plot_df <- rbind(N_df, P_df, K_df)
+ 
+```
+
+
+```{r}
+ggplot(soil_plot_df, aes(x = reorder(label,-var), y = var, fill = type)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+   # scale_y_continuous(name = "Percentage of Total Population", breaks = seq(0,100,20), labels = function(x)                                    paste0(x, "%"), limits = c(0, 100)) +
+  scale_fill_manual(breaks = c("N", "P", "K"), 
+                    values=c("turquoise1", "saddlebrown", "darkorange1")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Variance of the Soil Variables",
+      subtitle = "for each different crop",
+      x = "crop",
+      y = "Variance"
+   )
+
+
+```
+
+All of these variances are small but K is the smallest. P is slightly bigger and even though N is the largest it is still relatively small. For my last plot I would like to make a corr plot to show the correlations between all of the variables. 
+
+```{r}
+cor_plot_df <- standardized_crop_df[,1:7]
+cor_plot_df <- cor_plot_df %>%
+  na.omit()
+
+data(cor_plot_df)
+cor_plot_df <- cor(cor_plot_df)
+
+corrplot(cor_plot_df, type = "lower")
+```
+
+```{r}
+ggcorrplot(cor_plot_df, hc.order = TRUE,
+           hc.method = method,
+           type = "lower", 
+           lab = TRUE, 
+           lab_size = 3, 
+           method="circle", 
+           colors = c("tomato2", "white", "springgreen3"), 
+           title="Correlogram of Weather Variables and Soil Variables for different Crops",
+           ggtheme=theme_bw)
+```
+
+It does not seem like any variables have a strong correlation aside from K and P. The next highest correlations have scores that are over .5 points lower. K and P have a correlation of 0.74, P and N have a correlation of -0.23, and temperature and humidity have a correlation of 0.21. This is not incredibly helpful for our modeling.
