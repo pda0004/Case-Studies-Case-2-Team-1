@@ -1,0 +1,100 @@
+---
+title: "Crop Value Viz"
+---
+
+In this RMD file I will run an initial EDA to compare the crops.
+
+```{r}
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(ggcorrplot)
+library(corrplot)
+```
+
+```{r}
+setwd('C:/Users/donse/OneDrive/Documents/Fall2021/Case_Studies/Case-Studies-Case-2-Team-1/data')
+# Load data
+Crop_Details_Standardized <- read_csv("Crop_Details_Standardized.csv")
+```
+
+```{r}
+crop_cost <- Crop_Details_Standardized %>%
+  select(Crop, `Cost of cultivation
+(in INR) (per 6 by 6 m area)`)
+crop_cost$type <- "cost"
+colnames(crop_cost) <- c("crop", "value", "type")
+
+crop_profit <- Crop_Details_Standardized %>%
+  select(Crop, `Profit
+(in INR) (per 6 by 6 m area)`)
+crop_profit$type <- "profit"
+colnames(crop_profit) <- c("crop", "value", "type")
+
+value_plot_df <- rbind(crop_cost, crop_profit)
+
+```
+
+```{r}
+ggplot(value_plot_df, aes(x = reorder(crop,-value), y = value, fill = type)) +
+  theme_bw()+
+  geom_bar(stat = "identity", position = 'dodge') + 
+  scale_y_continuous(name = "Rupees", breaks = seq(0,5000,1000), labels = function(x) paste0(x, "₹"), limits = c(0, 5700)) +
+  scale_fill_manual(breaks = c("cost", "profit"), 
+                    values=c("black", "darkgreen")) +
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+   labs(
+      title = "Comparing the Costs and The Profits Of Growing Each Crop",
+      subtitle = "in a 6m by 6m plot",
+      x = "Crop",
+      y = "Number of Rupees"
+   )
+```
+
+Interesting. This plot show us the most expensive and the most profitable crops. Now I would like to explore the gap between cost and profit for each crop. Some crops might make more money but cost more to 
+cultivate.
+
+```{r}
+margin_df <- Crop_Details_Standardized %>%
+  mutate(margin = `Profit
+(in INR) (per 6 by 6 m area)` - `Cost of cultivation
+(in INR) (per 6 by 6 m area)`) %>%
+  select(Crop, margin)
+```
+ 
+```{r}
+ggplot(margin_df, aes(x = reorder(Crop,-margin), y = margin)) +
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  scale_y_continuous(name = "Margin Between Cost and Profit", breaks = seq(0,5000,1000), labels = function(x) paste0(x, "₹"),       limits = c(0, 5000)) +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+    labs(
+       title = "Comparing the gaps between Cost and Profit Each Crop",
+       subtitle = "in a 6m by 6m plot",
+       x = "crop") 
+  
+```
+
+Now one last plot, we would like to look at the proportion of the profit that each crops cost to plant is.
+
+```{r}
+proportion_df <- Crop_Details_Standardized %>%
+  mutate(proportion = `Profit
+(in INR) (per 6 by 6 m area)` / `Cost of cultivation
+(in INR) (per 6 by 6 m area)`) %>%
+  select(Crop, proportion)
+```
+
+```{r}
+ggplot(proportion_df, aes(x = reorder(Crop,-proportion), y = proportion)) +
+  geom_bar(stat = "identity", fill = "darkgreen") +
+  scale_y_continuous(name = "Times greater", breaks = seq(0,10,2), labels = function(x) paste0(x, "x"),       limits = c(0, 11)) +
+  theme_bw() + 
+  theme(axis.text.x = element_text(angle = 45, hjust=1)) +
+    labs(
+       title = "How Many Times Greater is the Profit than the Cost To Plant",
+       subtitle = "for each crop in a 6m by 6m plot",
+       x = "crop") 
+  
+```
+
